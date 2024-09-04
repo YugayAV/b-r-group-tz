@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import NewsItem from "../../types.ts";
+import { INewsItem } from "../../types.ts";
 import axios from "axios";
 
 const NewsList: React.FC = () => {
-  const [news, setNews] = useState<NewsItem[]>([]);
+  const [news, setNews] = useState<INewsItem[]>([]);
   /* создали стейт для хранения массива новостей, типизируем его через дженерик указывая что стейт будет
     массивом и про типизирован как NewsItem, начальное состояние пустой массив */
 
@@ -23,7 +23,7 @@ const NewsList: React.FC = () => {
       const topIdNews = response.data.slice(0, 100);
       /*после того как мы получили массив из 500 новостей мы отрезаем первые 100 и кладем в новую переменную */
       const newsPromises = topIdNews.map((id) =>
-        axios.get<NewsItem>(
+        axios.get<INewsItem>(
           `https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`,
         ),
       );
@@ -63,7 +63,7 @@ const NewsList: React.FC = () => {
         <ul className="news-list">
           {news.map((item) => (
             <li className="news-card" key={item.id}>
-              <a href="/" className="news-title">
+              <a href={`/news/${item.id}`} className="news-title">
                 {item.title}
               </a>
               <p className="news-author">Автор: {item.by}</p>
