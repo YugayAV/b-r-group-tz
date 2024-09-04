@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NewsItem from "../../interface.ts";
+import NewsItem from "../../types.ts";
 import axios from "axios";
 
 const NewsList: React.FC = () => {
