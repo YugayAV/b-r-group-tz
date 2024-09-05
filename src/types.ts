@@ -7,3 +7,10 @@ export interface INewsItem {
   time: number;
   descendants: number;
 }
+
+export interface IComment {
+  id: number;
+  text: string;
+  kids?: number[];
+  parent?: number;
+}

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { INewsItem } from "../../types.ts";
 import axios from "axios";
+import CommentTree from "../commentTree/CommentTree.tsx";
 
 const NewsCard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -44,6 +45,7 @@ const NewsCard: React.FC = () => {
             Вернуться к списку новостей
           </button>
           <h2>Комментарии:</h2>
+          <CommentTree />
         </div>
       )}
     </div>
