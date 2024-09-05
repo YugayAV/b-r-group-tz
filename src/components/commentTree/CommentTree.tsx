@@ -45,22 +45,23 @@ const CommentTree: React.FC = () => {
     }));
   };
 
-  useEffect(() => {
-    const loadRootComments = async () => {
-      if (!id) return;
-      try {
-        const response = await axios.get<{ kids: number[] }>(
-          `https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`,
-        );
-        const rootKids = response.data.kids;
-        if (rootKids) {
-          const comments = await fetchAllComments(rootKids);
-          setRootComment(comments);
-        }
-      } catch (error) {
-        console.error(error);
+  const loadRootComments = async () => {
+    if (!id) return;
+    try {
+      const response = await axios.get<{ kids: number[] }>(
+        `https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`,
+      );
+      const rootKids = response.data.kids;
+      if (rootKids) {
+        const comments = await fetchAllComments(rootKids);
+        setRootComment(comments);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     loadRootComments();
   }, [id, fetchAllComments]);
 
@@ -95,6 +96,7 @@ const CommentTree: React.FC = () => {
           </li>
         ))}
       </ul>
+      <button onClick={loadRootComments}>Обновить комментарии</button>
     </div>
   );
 };
