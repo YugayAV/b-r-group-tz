@@ -9,6 +9,7 @@ const CommentTree: React.FC = () => {
   const [childComment, setChildComment] = useState<{
     [key: number]: IComment[];
   }>({});
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [visibleComments, setVisibleComments] = useState<{
     [key: number]: boolean;
   }>({});
@@ -59,6 +60,7 @@ const CommentTree: React.FC = () => {
     } catch (error) {
       console.error(error);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -67,36 +69,46 @@ const CommentTree: React.FC = () => {
 
   return (
     <div>
-      <h3>Это комментарии</h3>
-      <ul>
-        {rootComment.map((comment) => (
-          <li key={comment.id}>
-            <p>{comment.text}</p>
-            {comment.kids && (
-              <button
-                onClick={() => {
-                  loadChildComments(comment.id, comment.kids!);
-                  toggleCommentsVisibility(comment.id);
-                }}
-              >
-                {visibleComments[comment.id]
-                  ? "Скрыть ответы"
-                  : "Показать ответы"}
-              </button>
-            )}
-            {visibleComments[comment.id] && childComment[comment.id] && (
-              <ul>
-                {childComment[comment.id].map((child) => (
-                  <li key={child.id}>
-                    <p>{child.text}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
-      <button onClick={loadRootComments}>Обновить комментарии</button>
+      {isLoading ? (
+        <h3>Загрузка...</h3>
+      ) : rootComment.length === 0 ? (
+        <>
+          <h3>Комментарии отсутствуют</h3>
+          <button onClick={loadRootComments}>Обновить комментарии</button>
+        </>
+      ) : (
+        <>
+          <ul>
+            {rootComment.map((comment) => (
+              <li key={comment.id}>
+                <p>{comment.text}</p>
+                {comment.kids && (
+                  <button
+                    onClick={() => {
+                      loadChildComments(comment.id, comment.kids!);
+                      toggleCommentsVisibility(comment.id);
+                    }}
+                  >
+                    {visibleComments[comment.id]
+                      ? "Скрыть ответы"
+                      : "Показать ответы"}
+                  </button>
+                )}
+                {visibleComments[comment.id] && childComment[comment.id] && (
+                  <ul>
+                    {childComment[comment.id].map((child) => (
+                      <li key={child.id}>
+                        <p>{child.text}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+          <button onClick={loadRootComments}>Обновить комментарии</button>
+        </>
+      )}
     </div>
   );
 };

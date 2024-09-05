@@ -36,6 +36,7 @@ const NewsCard: React.FC = () => {
         <div>
           <h1>{newsItem?.title}</h1>
           <p>Автор: {newsItem?.by}</p>
+          <a href={newsItem?.url || "#"}>Страница новости</a>
           <p>
             Дата публикации:{" "}
             {new Date(newsItem?.time * 1000).toLocaleDateString()}
