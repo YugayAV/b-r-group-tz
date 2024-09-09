@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { INewsItem } from "../../types.ts";
 import axios from "axios";
+import "./style.css";
+import { useNavigate } from "react-router-dom";
 
+/**
+ * создаем компонент
+ * для отображения списка новостей
+ */
 const NewsList: React.FC = () => {
   const [news, setNews] = useState<INewsItem[]>([]);
   /* создали стейт для хранения массива новостей, типизируем его через дженерик указывая что стейт будет
@@ -12,7 +18,7 @@ const NewsList: React.FC = () => {
      что - то показывать в момент ожидания загрузки новостей, и так же типизируется через дженерик как булеан,
      начальное состояние имеет true */
 
-  /* далее мы создаем фетч запрос естественно асинхронный и используем трай кетч что бы с лучае чего отловить ошибку*/
+  /** далее мы создаем фетч запрос естественно асинхронный и используем трай кетч что бы с лучае чего отловить ошибку*/
   const fetchNews = async () => {
     try {
       const response = await axios.get<number[]>(
@@ -44,10 +50,14 @@ const NewsList: React.FC = () => {
       setLoading(false);
     }
   };
+  const navigate = useNavigate();
+  const handelCardClick = (id: number) => {
+    navigate(`/news/${id}`);
+  };
 
   useEffect(() => {
     fetchNews();
-    /* первым делом вызываем функцию которая делает запрос*/
+    /** первым делом вызываем функцию которая делает запрос*/
     const interval = setInterval(fetchNews, 60000);
     /*ставим интервал согласно ТЗ и обновляем запрос каждую минуту*/
     return () => clearInterval(interval);
@@ -55,29 +65,39 @@ const NewsList: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h1 className="news-banner">Последние новости</h1>
+    <div className="news-list-container">
+      <div className="news-list-header">
+        <h1 className="news-list-banner">Fresh Hacker's News</h1>
+        <button
+          onClick={fetchNews}
+          type="button"
+          className="news-list-button-update"
+        >
+          Refresh news list
+        </button>
+      </div>
       {loading ? (
-        <p className="loading-title">Загружаю новости...</p>
+        <p className="news-list-loading-title">Загружаю новости...</p>
       ) : (
         <ul className="news-list">
           {news.map((item) => (
-            <li className="news-card" key={item.id}>
-              <a href={`/news/${item.id}`} className="news-title">
-                {item.title}
-              </a>
-              <p className="news-author">Автор: {item.by}</p>
-              <p className="news-score">Рейтинг: {item.score}</p>
-              <p className="news-comments">Комментарии: {item.descendants}</p>
-              <p className="news-date">
+            <li
+              className="news-list-card"
+              key={item.id}
+              onClick={() => handelCardClick(item.id)}
+            >
+              <div className="news-list-card-title">{item.title}</div>
+              <div className="news-list-card-author">Автор: {item.by}</div>
+              <div className="news-list-card-score">Рейтинг: {item.score}</div>
+              <div className="news-list-card-comments">
+                Комментарии: {item.descendants}
+              </div>
+              <div className="news-list-card-date">
                 Дата публикации:{" "}
                 {new Date(item.time * 1000).toLocaleDateString()};
-              </p>
+              </div>
             </li>
           ))}
-          <button onClick={fetchNews} type="button" className="update-newsList">
-            Обновить новости
-          </button>
         </ul>
       )}
     </div>
