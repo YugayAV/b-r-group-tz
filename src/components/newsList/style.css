@@ -23,21 +23,6 @@
     font-size: 45px;
 }
 
-.news-list-button-update {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 60px;
-    width: 230px;
-    border-radius: var(--button-border-radius);
-    font-size: 16px;
-    font-weight: 700;
-    background: var(--gray-gradient);
-    color: #fff;
-    border: var(--border);
-    background-clip: text;
-}
-
 .news-list {
     display: flex;
     flex-wrap: wrap;

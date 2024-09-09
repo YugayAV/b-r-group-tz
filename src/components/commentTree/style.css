@@ -1,0 +1,30 @@
+.comment-tree-container {
+display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment-tree-container p {
+    margin: 0;
+}
+
+.comment-tree-card {
+    flex: 1 1 calc(50% - 12px);
+    box-sizing: border-box;
+    padding: 12px;
+    border: var(--border);
+    border-radius: 15px;
+    background: rgba(30, 30, 30, 0.8);
+}
+
+.comment-tree-update-comment-button {
+    margin-top: 15px;
+}
+
+.comment-tree-card-button {
+    margin-top: 10px;
+}
+
+.comment-tree-child {
+    padding: 10px;
+}

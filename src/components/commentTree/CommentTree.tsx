@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { IComment } from "../../types.ts";
 import axios from "axios";
+import "./style.css";
 
 const CommentTree: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -74,16 +75,24 @@ const CommentTree: React.FC = () => {
       ) : rootComment.length === 0 ? (
         <>
           <h3>Комментарии отсутствуют</h3>
-          <button onClick={loadRootComments}>Обновить комментарии</button>
+          <button
+            type="button"
+            className="comment-tree-button"
+            onClick={loadRootComments}
+          >
+            Обновить комментарии
+          </button>
         </>
       ) : (
         <>
-          <ul>
+          <div className="comment-tree-container">
             {rootComment.map((comment) => (
-              <li key={comment.id}>
+              <div className="comment-tree-card" key={comment.id}>
                 <p>{comment.text}</p>
                 {comment.kids && (
                   <button
+                    type="button"
+                    className="comment-tree-card-button"
                     onClick={() => {
                       loadChildComments(comment.id, comment.kids!);
                       toggleCommentsVisibility(comment.id);
@@ -95,18 +104,24 @@ const CommentTree: React.FC = () => {
                   </button>
                 )}
                 {visibleComments[comment.id] && childComment[comment.id] && (
-                  <ul>
+                  <div>
                     {childComment[comment.id].map((child) => (
-                      <li key={child.id}>
+                      <div className="comment-tree-child" key={child.id}>
                         <p>{child.text}</p>
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 )}
-              </li>
+              </div>
             ))}
-          </ul>
-          <button onClick={loadRootComments}>Обновить комментарии</button>
+          </div>
+          <button
+            type="button"
+            className="comment-tree-update-comment-button"
+            onClick={loadRootComments}
+          >
+            Обновить комментарии
+          </button>
         </>
       )}
     </div>
