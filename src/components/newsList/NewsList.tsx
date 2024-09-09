@@ -77,11 +77,11 @@ const NewsList: React.FC = () => {
         </button>
       </div>
       {loading ? (
-        <p className="news-list-loading-title">Загружаю новости...</p>
+        <div className="news-list-loading-title">Загружаю новости...</div>
       ) : (
-        <ul className="news-list">
+        <div className="news-list">
           {news.map((item) => (
-            <li
+            <div
               className="news-list-card"
               key={item.id}
               onClick={() => handelCardClick(item.id)}
@@ -96,9 +96,9 @@ const NewsList: React.FC = () => {
                 Дата публикации:{" "}
                 {new Date(item.time * 1000).toLocaleDateString()};
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
