@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { IComment } from "../../types.ts";
 import axios from "axios";
 import "./style.css";
@@ -70,60 +70,47 @@ const CommentTree: React.FC = () => {
 
   return (
     <div>
-      {isLoading ? (
-        <h3>Загрузка...</h3>
-      ) : rootComment.length === 0 ? (
-        <>
-          <h3>Комментарии отсутствуют</h3>
-          <button
-            type="button"
-            className="comment-tree-button"
-            onClick={loadRootComments}
-          >
-            Обновить комментарии
-          </button>
-        </>
-      ) : (
-        <>
-          <div className="comment-tree-container">
-            {rootComment.map((comment) => (
-              <div className="comment-tree-card" key={comment.id}>
-                <p>{comment.text}</p>
-                {comment.kids && (
-                  <button
-                    type="button"
-                    className="comment-tree-card-button"
-                    onClick={() => {
-                      loadChildComments(comment.id, comment.kids!);
-                      toggleCommentsVisibility(comment.id);
-                    }}
-                  >
-                    {visibleComments[comment.id]
-                      ? "Скрыть ответы"
-                      : "Показать ответы"}
-                  </button>
-                )}
-                {visibleComments[comment.id] && childComment[comment.id] && (
-                  <div>
-                    {childComment[comment.id].map((child) => (
-                      <div className="comment-tree-child" key={child.id}>
-                        <p>{child.text}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="comment-tree-update-comment-button"
-            onClick={loadRootComments}
-          >
-            Обновить комментарии
-          </button>
-        </>
-      )}
+      {isLoading && <h3>Загрузка...</h3>}
+      {!rootComment.length && <h3>Комментарии отсутствуют</h3>}
+      <>
+        <div className="comment-tree-container">
+          {rootComment.map((comment) => (
+            <div className="comment-tree-card" key={comment.id}>
+              <p>{comment.text}</p>
+              {comment.kids && (
+                <button
+                  type="button"
+                  className="comment-tree-card-button"
+                  onClick={() => {
+                    loadChildComments(comment.id, comment.kids!);
+                    toggleCommentsVisibility(comment.id);
+                  }}
+                >
+                  {visibleComments[comment.id]
+                    ? "Скрыть ответы"
+                    : "Показать ответы"}
+                </button>
+              )}
+              {visibleComments[comment.id] && childComment[comment.id] && (
+                <div>
+                  {childComment[comment.id].map((child) => (
+                    <div className="comment-tree-child" key={child.id}>
+                      <p>{child.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="comment-tree-update-comment-button"
+          onClick={loadRootComments}
+        >
+          Обновить комментарии
+        </button>
+      </>
     </div>
   );
 };
