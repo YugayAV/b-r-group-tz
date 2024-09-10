@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface INewsItem {
   id: number;
   title: string;
@@ -13,4 +15,16 @@ export interface IComment {
   text: string;
   kids?: number[];
   parent?: number;
+}
+
+export interface IButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+  className?: string;
+  type?: "button" | "submit" | "reset";
+}
+
+export interface INewsItemProps {
+  item: INewsItem;
+  onItemClick: (item: INewsItem) => void;
 }

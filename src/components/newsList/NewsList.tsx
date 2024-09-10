@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { INewsItem } from "../../types.ts";
 import axios from "axios";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
+import Button from "../common/Button.tsx";
 
-/**
- * создаем компонент
- * для отображения списка новостей
- */
 const NewsList: React.FC = () => {
   const [news, setNews] = useState<INewsItem[]>([]);
   /* создали стейт для хранения массива новостей, типизируем его через дженерик указывая что стейт будет
@@ -19,12 +16,12 @@ const NewsList: React.FC = () => {
      начальное состояние имеет true */
 
   /** далее мы создаем фетч запрос естественно асинхронный и используем трай кетч что бы с лучае чего отловить ошибку*/
-  const fetchNews = async () => {
+  const fetchNews = useCallback(async () => {
     try {
       const response = await axios.get<number[]>(
         "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty",
       );
-      /*здесь мы делаем запрос и в запросе дженериком указываем какой тип данных нам нужен и в каком виде,
+      /** здесь мы делаем запрос и в запросе дженериком указываем какой тип данных нам нужен и в каком виде,
        * то есть нам нужны цифры в виде массива*/
       const topIdNews = response.data.slice(0, 100);
       /*после того как мы получили массив из 500 новостей мы отрезаем первые 100 и кладем в новую переменную */
@@ -49,7 +46,7 @@ const NewsList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
   const navigate = useNavigate();
   const handelCardClick = (id: number) => {
     navigate(`/news/${id}`);
@@ -68,38 +65,37 @@ const NewsList: React.FC = () => {
     <div className="news-list-container">
       <div className="news-list-header">
         <h1 className="news-list-banner">Fresh Hacker's News</h1>
-        <button
+        <Button
           onClick={fetchNews}
           type="button"
           className="news-list-button-update"
         >
           Refresh news list
-        </button>
+        </Button>
       </div>
-      {loading ? (
+      {loading && (
         <div className="news-list-loading-title">Загружаю новости...</div>
-      ) : (
-        <div className="news-list">
-          {news.map((item) => (
-            <div
-              className="news-list-card"
-              key={item.id}
-              onClick={() => handelCardClick(item.id)}
-            >
-              <div className="news-list-card-title">{item.title}</div>
-              <div className="news-list-card-author">Автор: {item.by}</div>
-              <div className="news-list-card-score">Рейтинг: {item.score}</div>
-              <div className="news-list-card-comments">
-                Комментарии: {item.descendants}
-              </div>
-              <div className="news-list-card-date">
-                Дата публикации:{" "}
-                {new Date(item.time * 1000).toLocaleDateString()};
-              </div>
-            </div>
-          ))}
-        </div>
       )}
+      <div className="news-list">
+        {news.map((item) => (
+          <div
+            className="news-list-card"
+            key={item.id}
+            onClick={() => handelCardClick(item.id)}
+          >
+            <div className="news-list-card-title">{item.title}</div>
+            <div className="news-list-card-author">Автор: {item.by}</div>
+            <div className="news-list-card-score">Рейтинг: {item.score}</div>
+            <div className="news-list-card-comments">
+              Комментарии: {item.descendants}
+            </div>
+            <div className="news-list-card-date">
+              Дата публикации: {new Date(item.time * 1000).toLocaleDateString()}
+              ;
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
