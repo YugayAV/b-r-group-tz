@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IComment } from "../../types.ts";
 import axios from "axios";
 import "./style.css";
+import { fetchAllComments } from "../../utils/fetchComment.tsx";
+import Button from "../common/Button.tsx";
 
 const CommentTree: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,25 +16,6 @@ const CommentTree: React.FC = () => {
   const [visibleComments, setVisibleComments] = useState<{
     [key: number]: boolean;
   }>({});
-
-  const fetchOneComment = async (id: number) => {
-    const response = await axios.get<IComment>(
-      `https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`,
-    );
-    return response.data;
-  };
-
-  const fetchAllComments = useCallback(
-    async (ids: number[]): Promise<IComment[]> => {
-      const commentsData: IComment[] = [];
-      for (const id of ids) {
-        const comment = await fetchOneComment(id);
-        commentsData.push(comment);
-      }
-      return commentsData;
-    },
-    [],
-  );
 
   const loadChildComments = async (parentId: number, childIds: number[]) => {
     if (childComment[parentId]) return;
@@ -78,7 +61,7 @@ const CommentTree: React.FC = () => {
             <div className="comment-tree-card" key={comment.id}>
               <p>{comment.text}</p>
               {comment.kids && (
-                <button
+                <Button
                   type="button"
                   className="comment-tree-card-button"
                   onClick={() => {
@@ -89,7 +72,7 @@ const CommentTree: React.FC = () => {
                   {visibleComments[comment.id]
                     ? "Скрыть ответы"
                     : "Показать ответы"}
-                </button>
+                </Button>
               )}
               {visibleComments[comment.id] && childComment[comment.id] && (
                 <div>
@@ -103,13 +86,13 @@ const CommentTree: React.FC = () => {
             </div>
           ))}
         </div>
-        <button
+        <Button
           type="button"
           className="comment-tree-update-comment-button"
           onClick={loadRootComments}
         >
           Обновить комментарии
-        </button>
+        </Button>
       </>
     </div>
   );
