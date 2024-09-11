@@ -8,6 +8,7 @@ export interface INewsItem {
   url: string;
   time: number;
   descendants: number;
+  kids?: number[];
 }
 
 export interface IComment {
